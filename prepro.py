@@ -24,7 +24,9 @@ def main():
     # tokenize & annotate
     with Pool(args.threads, initializer=init) as p:
         annotate_ = partial(annotate, wv_cased=args.wv_cased)
+        # Prepare training data
         train = list(tqdm(p.imap(annotate_, train, chunksize=args.batch_size), total=len(train), desc='train'))
+        # Prepare test data
         dev = list(tqdm(p.imap(annotate_, dev, chunksize=args.batch_size), total=len(dev), desc='dev  '))
     train = list(map(index_answer, train))
     initial_len = len(train)
